@@ -56,11 +56,24 @@ class TodoViewSet(viewsets.ModelViewSet):
             }
             return Response(msg, status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request):
+    def update(self, request, pk=None):
         pass
 
-    def retrieve(self, request):
-        pass
+    def retrieve(self, request, pk=None):
+        print ">>> User", request.user
+        print ">>> Token", request.auth
 
-    def destroy(self, request):
+        post = Todo.objects.get(id=pk)
+
+        if post:
+            serializer = TodoSerializer(post)
+            return Response(serializer.data)
+        else:
+            msg = {
+                "error": 404,
+                "message": "Todo task could not be found"
+            }
+            return Response(msg, status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, pk=None):
         pass
