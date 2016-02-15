@@ -7,7 +7,7 @@ class TodoSerializer1(serializers.ModelSerializer):
         model = Todo
 
 class TodoSerializer(serializers.Serializer):
-
+    id = serializers.IntegerField(read_only=True)
     author = serializers.CharField()
     description = serializers.CharField(min_length=5)
     due_at = serializers.DateTimeField(allow_null=True, required=False)
