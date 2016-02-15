@@ -39,9 +39,16 @@ INSTALLED_APPS = (
 
     'todo_app',
     'rest_framework',
+    'corsheaders',
 )
 
+CORS_URLS_REGEX = r'^/api/v1/.*$'
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
