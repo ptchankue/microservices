@@ -48,6 +48,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'todo_service.middleware.auth.CustomAuthMiddleware'
 )
 
 ROOT_URLCONF = 'todo_service.urls'
