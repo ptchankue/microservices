@@ -27,15 +27,52 @@ class TokenTest(TestCase):
         pass
 
 class LoginTest(TestCase):
-    pass
+    """Test case for login in"""
+
+    def setUp(self):
+        self.util = UserUtil()
+
+    def test_login(self):
+        """should pass"""
+
+        user = self.util.test_create_user()
+
+        payload = {
+            "username": "test",
+            "password": "test"
+        }
+        url = "/api/v1/login/"
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_fail(self):
+        """should fail"""
+        payload = {
+            "username": "test",
+            "password": "test@@"
+        }
+        url = "/api/v1/login/"
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 404)
 
 class SignupTest(TestCase):
-    pass
+    """Test case for signing up"""
+    def test_signup(self):
+        payload = {
+            "username": "alphabet",
+            "password": "test@@"
+        }
+        url = "/api/v1/signup/"
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, 201)
 
 class UserUtil(object):
-
+    """
+    Util class used to create users for testing
+    """
     def __init__(self, **attrs):
         self.payload = {}
+
     def test_create_user(self):
         self.payload["username"] = "test"
         self.payload["password"] = "test"
@@ -44,5 +81,5 @@ class UserUtil(object):
         except Exception, e:
             print e
             user = None
-            pass
+        
         return user
