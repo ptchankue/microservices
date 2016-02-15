@@ -108,6 +108,42 @@ def create_auth_token(user):
         token = Token.objects.create(user=user)
     return token.key
 
+class VerifyViewSet(viewsets.ModelViewSet):
+    """ API endpoint to verify a user token """
+    serializer_class = UserSerializer
+    def create(self, request):
+        print request.data
+        if "token" in request.data and request.data["token"]:
+
+            token = get_user_by_token(request.data["token"])
+
+            if token:
+                #User.objects.get(id=3)
+                print "the user id", token
+                user = User.objects.get(id= token).__dict__
+                response = {
+                    "username": user["username"],
+                    "firstname": user["first_name"],
+                    "lastname": user["last_name"],
+                    "email": user["email"],
+                    "token": request.data["token"],
+                }
+                return Response(response)
+            else:
+                msg = {
+                    "error": 404,
+                    "message": "token %s was not found"%(request.data["token"])
+                }
+                return Response(msg, status.HTTP_404_NOT_FOUND)
+
+            return Response("OK")
+        else:
+            msg = {
+                "error": 400,
+                "message": "<token> needs to be provided"
+            }
+            return Response(msg, status.HTTP_400_BAD_REQUEST)
+
 # getting token
 def get_auth_token(user):
     print ">>> getting a token for", user
@@ -132,3 +168,12 @@ def create_user(payload):
     except IntegrityError, e:
         user= User.objects.get(username=payload["username"])
     return user
+
+def get_user_by_token(token):
+    try:
+        id = Token.objects.get(key=token).user_id
+    except Exception, e:
+        print e
+        id = None
+        pass
+    return id
