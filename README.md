@@ -7,22 +7,23 @@ The two services will not be sharing any data hence have to commnuicate through 
 
 [Django Rest Framework] (http://www.django-rest-framework.org/) will intensively be used in this project for :
 
-*	Views implementation (Class Based views),
+*	Views implementation (Class Based Views),
 *	Authentification: Generating and managing tokens
 *	Serializers design
 
 ## Table of content
 
-[User Service]()
+[User Service](#userservice)
 
-[Todo Service]()
+[Todo Service](#todoservice)
 
+<a id="userservice"></a>
 ## User service:
 
 The user service allows users to signup (very simple user model) and login to the system. When a user login a token is generated and stored for her/him, that token will then be used by other microservices to identify each user.
 
 
-
+<a id="todoservice"></a>
 ## Todo Service:
 
 Steps to set up the project:
