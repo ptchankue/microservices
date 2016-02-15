@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/todos/$', creation, name='todo-creation'),
 
     # to update, view and delete a todo task
-    url(r'^api/v1/todos/(?P<pk>)/$', creation, name='todo-detail'),
+    url(r'^api/v1/todos/(?P<pk>[^/])/$', details, name='todo-detail'),
 
     url(r'^admin/', include(admin.site.urls)),
 )
