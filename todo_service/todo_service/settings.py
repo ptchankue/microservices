@@ -36,6 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'todo_app',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,3 +83,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Url of the user service that will be used to verify tokens
+USER_URL = "127.0.0.1:8001/api/v1"
