@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
 
 from rest_framework import (
     authentication,
@@ -28,7 +29,7 @@ def home(request):
 
 
 
-class SignUpView(viewsets.ModelViewSet):
+class SignUpViewSet(viewsets.ModelViewSet):
     """"""
     serializer_class= UserSerializer
     queryset= User.objects.all()
@@ -50,7 +51,7 @@ class SignUpView(viewsets.ModelViewSet):
             if "email" in serializer.data and serializer.data["email"]:
                 myuser["email"] = serializer.data["email"]
 
-            user = User.objects.create_user(**myuser)
+            user = create_user(myuser)
 
             serializer = UserSerializer(user)
             return Response(serializer.data, status.HTTP_201_CREATED)
@@ -59,11 +60,75 @@ class SignUpView(viewsets.ModelViewSet):
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
+class LoginViewSet(viewsets.ModelViewSet):
+    """ API endpoint for login in """
+    serializer_class = LoginSerializer
+    def create(self, request):
+        logger.debug("Signing in a user")
+        print ">>> User",request.user
+        print ">>> Token",request.auth
+
+        serializer = LoginSerializer(data = request.data)
+        if serializer.is_valid():
+            user = authenticate(username=serializer.data["username"],
+                password=serializer.data["password"])
+            if user:
+                if user.is_active:
+                    # Preparing customised response
+                    response = {}
+                    response["username"] = user.username
+                    response["first_name"] = user.first_name
+                    response["last_name"] = user.last_name
+                    response["email"] = user.email
+
+                    token = get_auth_token(user)
+                    if token == None:
+                        token = create_auth_token(user)
+                    response["token"] = token
+
+                    return Response(response, status.HTTP_200_OK)
+                else:
+                    return Response("User is authenticated and not is active", status.HTTP_200_OK)
+            else:
+                msg = {
+                    "error": 404,
+                    "message": "Username and Password do not match"
+                }
+                return Response(msg, status.HTTP_404_NOT_FOUND)
+
+        else:
+            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 # creating token after login
 def create_auth_token(user):
-    Token.objects.create(user=instance)
+    print ">>> creating a token"
+    token = get_auth_token(user)
+    if token==None:
+        print ">>> actual token creation"
+        token = Token.objects.create(user=user)
+    return token.key
 
 # getting token
-def get_user_token(user):
-    return Token.objects.get(user_id=user.id).key
+def get_auth_token(user):
+    print ">>> getting a token for", user
+    try:
+        token = Token.objects.get(user_id=user.id)
+        if token:
+            return token.key
+        else:
+            return None
+    except Exception, e:
+        return None
+
+def create_user(payload):
+    """
+        Create a user
+        Input: a dictionary containing the user data
+         the keys are (username, password, email, first_name, last_name)
+    """
+    print ">>> creating a user"
+    try:
+        user = User.objects.create_user(**payload)
+    except IntegrityError, e:
+        user= User.objects.get(username=payload["username"])
+    return user
