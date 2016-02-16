@@ -94,7 +94,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Url of the user service that will be used to verify tokens
-USER_URL = "127.0.0.1:5000/api/v1"
+USER_URL = "http://127.0.0.1:5000/api/v1"
 
 # default number of days for a task's due date
 DEFAULT_DAYS = 1
