@@ -124,8 +124,9 @@ def create_auth_token(user):
 class VerifyViewSet(viewsets.ModelViewSet):
     """ API endpoint to verify a user token """
     serializer_class = UserSerializer
-    def create(self, request):
 
+    def create(self, request):
+        print request.data
         if "token" in request.data and request.data["token"]:
 
             token = get_user_by_token(request.data["token"])
@@ -147,7 +148,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
                     "error": 404,
                     "message": "token %s was not found"%(request.data["token"])
                 }
-                return Response(msg, status.HTTP_404_NOT_FOUND)
+                return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
         else:
             msg = {
