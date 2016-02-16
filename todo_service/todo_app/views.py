@@ -143,4 +143,22 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None):
         """Deleting a task"""
-        pass
+        print ">>> User", request.user
+        print ">>> Token", request.auth
+
+        post = Todo.objects.get(id=pk)
+
+        if post:
+            post.delete()
+            msg = {
+                "error": 204,
+                "message": "Task was succesfully deleted"
+            }
+
+            return Response(msg, status=status.HTTP_204_NO_CONTENT)
+        else:
+            msg = {
+                "error": 404,
+                "message": "Todo task could not be found"
+            }
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
