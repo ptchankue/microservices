@@ -3,7 +3,6 @@
 """
 import logging
 import datetime
-import json
 
 from django.shortcuts import HttpResponse
 from django.conf import settings
@@ -58,9 +57,8 @@ class TodoViewSet(viewsets.ModelViewSet):
             post.author = serializer.data["author"]
 
             if "due_at" in serializer.data and serializer.data["due_at"]:
-                _date = datetime.datetime.strptime(str(serializer.data['due_at']),
-                    "%Y-%m-%dT%H:%M:%S.%fZ")
-                post.due_at = _date
+                post.due_at = convert_time(serializer.data["due_at"])
+
             else:
                 today = datetime.datetime.now()
                 _date = (today - datetime.timedelta(days=settings.DEFAULT_DAYS))
@@ -93,9 +91,8 @@ class TodoViewSet(viewsets.ModelViewSet):
                 check_permission(request, post, 'update')
 
                 if "due_at" in serializer.data and serializer.data["due_at"]:
-                    _date = datetime.datetime.strptime(str(serializer.data['due_at']),
-                        "%Y-%m-%dT%H:%M:%S.%fZ")
-                    post.due_at = _date
+
+                    post.due_at = convert_time(serializer.data["due_at"])
 
                 if "description" in serializer.data and serializer.data["description"]:
                     post.description = serializer.data["description"]
@@ -181,11 +178,26 @@ class TodoViewSet(viewsets.ModelViewSet):
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
 def check_permission(request, post, action):
-    """"""
-    if post.author!= request.user:
+    """
+        Checks if the current user has the right to perform an action
+        Args: request (request object), post (The instance of the task )
+              and action (to be performed: view/delete/update)
+        Result: None if everythong is fine, 403 error otherwise
+    """
+    if post.author != request.user:
 
         msg = {
             "error": 403,
             "message": "You are not permitted to %s this content"%action
         }
         return Response(msg, status=403)
+
+def convert_time(str_time):
+    """
+        Convert the date to the correct format
+        Args: data (string)
+        Return: datetime in the right format
+    """
+    _date = datetime.datetime.strptime(str(str_time),
+                                       "%Y-%m-%dT%H:%M:%S.%fZ")
+    return _date

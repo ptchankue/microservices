@@ -19,7 +19,8 @@ details = TodoViewSet.as_view({
     'delete': 'destroy'
 })
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Examples:
     url(r'^$', 'todo_app.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
