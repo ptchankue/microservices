@@ -35,8 +35,13 @@ class TodoViewSet(viewsets.ModelViewSet):
     """API endpoing to manage todo lists"""
 
     serializer_class = TodoSerializer
-    queryset = Todo.objects.all()
 
+    def list(self, request):
+        """>>>Listing all tasks for the logged user"""
+        queryset = Todo.objects.filter(author=request.user)
+
+        serializer = TodoSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request):
         """Creating a task for a user"""
@@ -45,7 +50,7 @@ class TodoViewSet(viewsets.ModelViewSet):
         print ">>> Token:", request.auth, request.current_user
         serializer = TodoSerializer(data=request.data)
 
-        serializer.initial_data["author"] = request.current_user["username"]
+        serializer.initial_data["author"] = request.user
         if serializer.is_valid():
             post = Todo()
 
