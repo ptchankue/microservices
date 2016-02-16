@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'todo_app',
     'rest_framework',
     'corsheaders',
+    'django_nose',
 )
 
 CORS_URLS_REGEX = r'^/api/v1/.*$'
@@ -102,3 +103,10 @@ DEFAULT_DAYS = 1
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=todo_app',
+]
