@@ -90,6 +90,14 @@ class TodoViewSet(viewsets.ModelViewSet):
 
             if post:
 
+                if post.author!= request.user:
+
+                    msg = {
+                        "error": 403,
+                        "message": "You are not permitted to update this content"
+                    }
+                    return Response(msg, status=403)
+
                 if "due_at" in serializer.data and serializer.data["due_at"]:
                     _date = datetime.datetime.strptime(str(serializer.data['due_at']),
                         "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -167,6 +175,14 @@ class TodoViewSet(viewsets.ModelViewSet):
         post = Todo.objects.get(id=pk)
 
         if post:
+            if post.author!= request.user:
+
+                msg = {
+                    "error": 403,
+                    "message": "You are not permitted to delete this content"
+                }
+                return Response(msg, status=403)
+
             post.delete()
             msg = {
                 "error": 204,
