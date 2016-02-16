@@ -90,13 +90,7 @@ class TodoViewSet(viewsets.ModelViewSet):
 
             if post:
 
-                if post.author!= request.user:
-
-                    msg = {
-                        "error": 403,
-                        "message": "You are not permitted to update this content"
-                    }
-                    return Response(msg, status=403)
+                check_permission(request, post, 'update')
 
                 if "due_at" in serializer.data and serializer.data["due_at"]:
                     _date = datetime.datetime.strptime(str(serializer.data['due_at']),
@@ -150,16 +144,11 @@ class TodoViewSet(viewsets.ModelViewSet):
 
         if post:
 
-            if author==post.author:
-                serializer = TodoSerializer(post)
-                return Response(serializer.data)
-            else:
-                # Throw an error if the user doesn't have permission to view this content
-                msg = {
-                    "error": 403,
-                    "message": "You are not permitted to view this content"
-                }
-                return Response(msg, status=403)
+            check_permission(request, post, 'view')
+
+            serializer = TodoSerializer(post)
+            return Response(serializer.data)
+
         else:
             msg = {
                 "error": 404,
@@ -172,18 +161,12 @@ class TodoViewSet(viewsets.ModelViewSet):
         print ">>> User", request.user
         print ">>> Token", request.auth
 
-        post = Todo.objects.get(id=pk)
+        task = Todo.objects.get(id=pk)
 
-        if post:
-            if post.author!= request.user:
+        if task:
+            check_permission(request, task, 'delete')
 
-                msg = {
-                    "error": 403,
-                    "message": "You are not permitted to delete this content"
-                }
-                return Response(msg, status=403)
-
-            post.delete()
+            task.delete()
             msg = {
                 "error": 204,
                 "message": "Task was succesfully deleted"
@@ -196,3 +179,13 @@ class TodoViewSet(viewsets.ModelViewSet):
                 "message": "Todo task could not be found"
             }
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
+
+def check_permission(request, post, action):
+    """"""
+    if post.author!= request.user:
+
+        msg = {
+            "error": 403,
+            "message": "You are not permitted to %s this content"%action
+        }
+        return Response(msg, status=403)
