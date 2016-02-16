@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render, HttpResponse
 
 from django.contrib.auth.models import User
@@ -5,8 +7,6 @@ from django.contrib.auth import authenticate
 from django.db import IntegrityError
 
 from rest_framework import (
-    authentication,
-    permissions,
     viewsets,
     status
 )
@@ -18,26 +18,25 @@ from user_app.serializers import (
     LoginSerializer,
 )
 # Create your views here.
-import logging
 
 logger = logging.getLogger(__name__)
 
 def home(request):
 
-    msg="You landed safely on the UserService API"
+    msg = "You landed safely on the UserService API"
     return HttpResponse(msg)
 
 
 
 class SignUpViewSet(viewsets.ModelViewSet):
-    """"""
-    serializer_class= UserSerializer
-    queryset= User.objects.all()
+    """Signing up a user"""
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
     def create(self, request):
         logger.debug("Creating a new user")
 
-        serializer = UserSerializer(data = request.data)
+        serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
             myuser = {}
@@ -65,13 +64,13 @@ class LoginViewSet(viewsets.ModelViewSet):
     serializer_class = LoginSerializer
     def create(self, request):
         logger.debug("Signing in a user")
-        print ">>> User",request.user
-        print ">>> Token",request.auth
+        print ">>> User", request.user
+        print ">>> Token", request.auth
 
-        serializer = LoginSerializer(data = request.data)
+        serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = authenticate(username=serializer.data["username"],
-                password=serializer.data["password"])
+								password=serializer.data["password"])
             if user:
                 if user.is_active:
                     # Preparing customised response
@@ -82,7 +81,7 @@ class LoginViewSet(viewsets.ModelViewSet):
                     response["email"] = user.email
 
                     token = get_auth_token(user)
-                    if token == None:
+                    if token is None:
                         token = create_auth_token(user)
                     response["token"] = token
 
@@ -99,14 +98,18 @@ class LoginViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
-# creating token after login
 def create_auth_token(user):
-    print ">>> creating a token"
-    token = get_auth_token(user)
-    if token==None:
-        print ">>> actual token creation"
-        token = Token.objects.create(user=user)
-    return token.key
+	"""
+	creating a token
+	Arg: user, an instance of User
+	Result: a token
+	"""
+	print ">>> creating a token"
+	token = get_auth_token(user)
+	if token is None:
+		print ">>> actual token creation"
+		token = Token.objects.create(user=user)
+	return token.key
 
 class VerifyViewSet(viewsets.ModelViewSet):
     """ API endpoint to verify a user token """
@@ -120,7 +123,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
             if token:
                 #User.objects.get(id=3)
                 print "the user id", token
-                user = User.objects.get(id= token).__dict__
+                user = User.objects.get(id=token).__dict__
                 response = {
                     "username": user["username"],
                     "firstname": user["first_name"],
@@ -136,7 +139,6 @@ class VerifyViewSet(viewsets.ModelViewSet):
                 }
                 return Response(msg, status.HTTP_404_NOT_FOUND)
 
-            return Response("OK")
         else:
             msg = {
                 "error": 400,
@@ -146,6 +148,11 @@ class VerifyViewSet(viewsets.ModelViewSet):
 
 # getting token
 def get_auth_token(user):
+	"""
+		Getting an authentification token
+		Args: an instance of User
+		Result: a token (string)
+	"""
     print ">>> getting a token for", user
     try:
         token = Token.objects.get(user_id=user.id)
@@ -158,22 +165,23 @@ def get_auth_token(user):
 
 def create_user(payload):
     """
-        Create a user
-        Input: a dictionary containing the user data
-         the keys are (username, password, email, first_name, last_name)
+        Creating a user
+        Args: a dictionary containing the user data
+			the keys are (username, password, email, first_name, last_name)
+		Result: an instance of the newly created user
     """
     print ">>> creating a user"
     try:
         user = User.objects.create_user(**payload)
     except IntegrityError, e:
-        user= User.objects.get(username=payload["username"])
+		print e
+        user = User.objects.get(username=payload["username"])
     return user
 
 def get_user_by_token(token):
     try:
-        id = Token.objects.get(key=token).user_id
+        i = Token.objects.get(key=token).user_id
     except Exception, e:
         print e
-        id = None
-        pass
-    return id
+        i = None
+    return i
