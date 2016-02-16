@@ -1,8 +1,8 @@
+import logging, datetime
+
 from django.shortcuts import render, HttpResponse
 
 from rest_framework import (
-	authentication,
-	permissions,
 	viewsets,
 	status
 )
@@ -12,10 +12,10 @@ from rest_framework.response import Response
 from todo_app.models import Todo
 
 from todo_app.serializers import TodoSerializer
-import logging, datetime
 
 # Create your views here.
 
+logger = logging.getLogger(__name__)
 
 def home(request):
     msg = "You have landed on the Todo service :)"
@@ -32,7 +32,7 @@ class TodoViewSet(viewsets.ModelViewSet):
 
         print ">>> User", request.user
         print ">>> Token", request.auth
-        serializer = TodoSerializer(data = request.data)
+        serializer = TodoSerializer(data=request.data)
 
         if serializer.is_valid():
             post = Todo()
@@ -60,6 +60,9 @@ class TodoViewSet(viewsets.ModelViewSet):
         pass
 
     def retrieve(self, request, pk=None):
+		"""
+			Get a token from the auth table
+		"""
         print ">>> User", request.user
         print ">>> Token", request.auth
 
