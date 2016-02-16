@@ -1,3 +1,10 @@
+"""
+    Implementing the views for the user service
+    - login
+    - signup
+    - verify/validate token
+
+"""
 import logging
 
 from django.shortcuts import render, HttpResponse
@@ -22,8 +29,11 @@ from user_app.serializers import (
 logger = logging.getLogger(__name__)
 
 def home(request):
+    """
+        Home page to reach this service
+    """
 
-    msg = "You landed safely on the UserService API"
+    msg = "You landed safely on the UserService API:\n"%request.META
     return HttpResponse(msg)
 
 
@@ -70,7 +80,7 @@ class LoginViewSet(viewsets.ModelViewSet):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = authenticate(username=serializer.data["username"],
-								password=serializer.data["password"])
+                                password=serializer.data["password"])
             if user:
                 if user.is_active:
                     # Preparing customised response
@@ -99,23 +109,23 @@ class LoginViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 def create_auth_token(user):
-	"""
-	creating a token
-	Arg: user, an instance of User
-	Result: a token
-	"""
-	print ">>> creating a token"
-	token = get_auth_token(user)
-	if token is None:
-		print ">>> actual token creation"
-		token = Token.objects.create(user=user)
-	return token.key
+    """
+        Creating a token
+        Arg: user, an instance of User
+        Result: a token
+    """
+    print ">>> creating a token"
+    token = get_auth_token(user)
+    if token is None:
+        print ">>> actual token creation"
+        token = Token.objects.create(user=user)
+    return token.key
 
 class VerifyViewSet(viewsets.ModelViewSet):
     """ API endpoint to verify a user token """
     serializer_class = UserSerializer
     def create(self, request):
-        print request.data
+
         if "token" in request.data and request.data["token"]:
 
             token = get_user_by_token(request.data["token"])
@@ -146,13 +156,12 @@ class VerifyViewSet(viewsets.ModelViewSet):
             }
             return Response(msg, status.HTTP_400_BAD_REQUEST)
 
-# getting token
 def get_auth_token(user):
-	"""
-		Getting an authentification token
-		Args: an instance of User
-		Result: a token (string)
-	"""
+    """
+        Getting an authentification token
+        Args: an instance of User
+        Result: a token (string)
+    """
     print ">>> getting a token for", user
     try:
         token = Token.objects.get(user_id=user.id)
@@ -160,28 +169,34 @@ def get_auth_token(user):
             return token.key
         else:
             return None
-    except Exception, e:
+    except Exception, exp:
+        logger.log(exp)
         return None
 
 def create_user(payload):
     """
         Creating a user
         Args: a dictionary containing the user data
-			the keys are (username, password, email, first_name, last_name)
-		Result: an instance of the newly created user
+            the keys are (username, password, email, first_name, last_name)
+        Result: an instance of the newly created user
     """
     print ">>> creating a user"
     try:
         user = User.objects.create_user(**payload)
-    except IntegrityError, e:
-		print e
+    except IntegrityError, exp:
+        print exp
         user = User.objects.get(username=payload["username"])
     return user
 
 def get_user_by_token(token):
+    """
+        Getting a user id from User knowing its token
+        Arg: token
+        Result: user id (django.contrib.auth.models.User)
+    """
     try:
         i = Token.objects.get(key=token).user_id
-    except Exception, e:
-        print e
+    except Exception, exp:
+        print exp
         i = None
     return i

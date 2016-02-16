@@ -1,29 +1,35 @@
+"""
+    Tests for the user service
+
+"""
 from django.test import TestCase
+import mock
 
 from user_app.views import (
     get_auth_token, create_auth_token,
     create_user,
 )
-import mock
 
 # Create your tests here.
 
 
 class TokenTest(TestCase):
+    """>>> Test case related to tokens"""
 
     def test_generate_token(self):
         """>>>Testing create_auth_token and get_auth_token"""
         util = UserUtil()
         user = util.test_create_user()
         # creating a token for the new user
-        t1 = create_auth_token(user)
+        token1 = create_auth_token(user)
         # getting the token of the same user
-        t2 = get_auth_token(user)
+        token2 = get_auth_token(user)
 
         # the 2 tokens should be equql
-        self.assertEqual(t1, t2)
+        self.assertEqual(token1, token2)
 
     def test_get_token(self):
+        """>>> Test for retrieving a token """
         pass
 
 class LoginTest(TestCase):
@@ -58,6 +64,7 @@ class LoginTest(TestCase):
 class SignupTest(TestCase):
     """Test case for signing up"""
     def test_signup(self):
+        """>>> Testing sign up"""
         payload = {
             "username": "alphabet",
             "password": "test@@"
@@ -68,18 +75,18 @@ class SignupTest(TestCase):
 
 class UserUtil(object):
     """
-    Util class used to create users for testing
+        Util class used to create users for testing
     """
     def __init__(self, **attrs):
         self.payload = {}
 
     def test_create_user(self):
+        """>>>Testing user creation"""
         self.payload["username"] = "test"
         self.payload["password"] = "test"
         try:
             user = create_user(self.payload)
-        except Exception, e:
-            print e
+        except Exception, exp:
+            print exp
             user = None
-        
         return user
