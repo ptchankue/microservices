@@ -10,6 +10,7 @@ class TodoSerializer(serializers.Serializer):
     author = serializers.CharField()
     description = serializers.CharField(min_length=5)
     due_at = serializers.DateTimeField(allow_null=True, required=False)
+    created_at = serializers.DateTimeField(read_only=True)
     completed = serializers.BooleanField(required=False)
 
 class TodoUpdateSerializer(serializers.Serializer):
