@@ -37,13 +37,15 @@ class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
 
+
     def create(self, request):
         """Creating a task for a user"""
 
         print ">>> User:", request.user
-        print ">>> Token:", request.auth
+        print ">>> Token:", request.auth, request.current_user
         serializer = TodoSerializer(data=request.data)
 
+        serializer.initial_data["author"] = request.current_user["username"]
         if serializer.is_valid():
             post = Todo()
 
@@ -51,14 +53,14 @@ class TodoViewSet(viewsets.ModelViewSet):
             post.author = serializer.data["author"]
 
             if "due_at" in serializer.data and serializer.data["due_at"]:
-                post.due_at = serializer.data["due_at"]
+                _date = datetime.datetime.strptime(str(serializer.data['due_at']),
+                    "%Y-%m-%dT%H:%M:%S.%fZ")
+                post.due_at = _date
             else:
                 today = datetime.datetime.now()
                 _date = (today - datetime.timedelta(days=settings.DEFAULT_DAYS))
 
                 post.due_at = _date
-
-            post.created_at = datetime.datetime.now()
 
             post.save()
 
@@ -129,11 +131,22 @@ class TodoViewSet(viewsets.ModelViewSet):
         print ">>> User", request.user
         print ">>> Token", request.auth
 
+        author = request.current_user["username"]
+        print "current user:", author
         post = Todo.objects.get(id=pk)
 
         if post:
-            serializer = TodoSerializer(post)
-            return Response(serializer.data)
+
+            if author==post.author:
+                serializer = TodoSerializer(post)
+                return Response(serializer.data)
+            else:
+                # Throw an error if the user doesn't have permission to view this content
+                msg = {
+                    "error": 403,
+                    "message": "You are not permitted to view this content"
+                }
+                return Response(msg, status=403)
         else:
             msg = {
                 "error": 404,
