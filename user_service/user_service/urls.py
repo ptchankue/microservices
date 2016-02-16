@@ -40,6 +40,8 @@ urlpatterns = patterns(
 
     url(r'^api/v1/verify/$', verify, name='verify-token'),
 
+    url(r'^api/v1/validate/$', verify, name='validate-token'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
 
