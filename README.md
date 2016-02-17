@@ -13,9 +13,23 @@ The two services will not be sharing any data hence have to commnuicate through 
 
 ## Table of content
 
+[Architecture](#architecture)
+
 [User Service](#userservice)
 
 [Todo Service](#todoservice)
+
+
+<a id="architecture"></a>
+## Architecture:
+
+![Architecture of teh microservice](docs/microservice_architecture.png)
+**Fig.1: Architecture of the microservice system**
+
+Figure 1 depicts the architecture of the micro service system allowing users to manipulate their todo lists. Users interacts wiuth the syste using any fornt-end application (mobile, desktop). 
+
+
+
 
 <a id="userservice"></a>
 ## User service:
