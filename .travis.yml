@@ -5,8 +5,8 @@ python:
   - "pypy"
 # command to install dependencies
 install:
-  - pip install -r userservice/requirements.txt
-  - pip install -r todoservice/requirements.txt
+#  - pip install -r userservice/requirements.txt
+#  - pip install -r todoservice/requirements.txt
 
 # command to run tests
 script: nosetests

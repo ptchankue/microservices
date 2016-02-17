@@ -24,7 +24,8 @@ The two services will not be sharing any data hence have to commnuicate through 
 ## Architecture:
 
 ![Architecture of teh microservice](docs/microservice_architecture.png)
-**Fig.1: Architecture of the microservice system**
+
+-> **Fig.1: Architecture of the microservice system** <-
 
 Figure 1 depicts the architecture of the micro service system allowing users to manipulate their todo lists. Users interacts wiuth the syste using any fornt-end application (mobile, desktop). 
 
@@ -34,11 +35,15 @@ Figure 1 depicts the architecture of the micro service system allowing users to 
 <a id="userservice"></a>
 ## User service:
 
+[Documentation](docs/users_api.md)
+
 The user service allows users to signup (very simple user model) and login to the system. When a user login a token is generated and stored for her/him, that token will then be used by other microservices to identify each user.
 
 
 <a id="todoservice"></a>
 ## Todo Service:
+
+[Documentation](docs/todo_api.md)
 
 Steps to set up the project:
 
