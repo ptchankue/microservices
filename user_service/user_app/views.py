@@ -23,6 +23,7 @@ from rest_framework.authtoken.models import Token
 from user_app.serializers import (
     UserSerializer,
     LoginSerializer,
+    UserUpdateSerializer
 )
 # Create your views here.
 
@@ -68,6 +69,70 @@ class SignUpViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+    def retrieve(self, request, pk=None):
+        """
+            Retrieving a task
+        """
+
+        post = User.objects.get(id=pk)
+
+        if post:
+
+            check_permission(request, post, 'view')
+
+            serializer = UserSerializer(post)
+            return Response(serializer.data)
+
+        else:
+            msg = {
+                "error": 404,
+                "message": "User could not be found"
+            }
+            return Response(msg, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None):
+        """>>>Updating user information"""
+
+        serializer = UserUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+
+            post = User.objects.get(id=pk)
+
+            if post:
+
+                check_permission(request, post, 'update')
+
+                if "first_name" in serializer.data and serializer.data["first_name"]:
+
+                    post.first_name = serializer.data["first_name"]
+
+                if "last_name" in serializer.data and serializer.data["last_name"]:
+                    post.last_name = serializer.data["last_name"]
+
+
+                post.save()
+
+                serializer = UserSerializer(post)
+
+
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            else:
+                msg = {
+                    "error": 404,
+                    "message": "User could not be found"
+                }
+                return Response(msg, status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            msg = {
+                "error": 400,
+                "message": serializer.errors
+            }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def destroy(self, request, pk=None):
+        pass
 
 class LoginViewSet(viewsets.ModelViewSet):
     """ API endpoint for login in """
@@ -171,7 +236,7 @@ def get_auth_token(user):
         else:
             return None
     except Exception, exp:
-        LOGGER.log(exp)
+        LOGGER.debug(exp)
         return None
 
 def create_user(payload):
@@ -201,3 +266,22 @@ def get_user_by_token(token):
         print exp
         i = None
     return i
+
+def check_permission(request, post, action):
+    """
+        Checks if the current user has the right to perform an action
+        Args: request (request object), post (The instance of the task )
+              and action (to be performed: view/delete/update)
+        Result: None if everythong is fine, 403 error otherwise
+    """
+    token = request.META['HTTP_AUTHORIZATION']
+    print token
+    user = User.objects.get(id=get_user_by_token(token))
+
+    if post.username != user.username:
+
+        msg = {
+            "error": 403,
+            "message": "You are not permitted to %s this content"%action
+        }
+        return Response(msg, status=403)
