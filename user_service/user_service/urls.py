@@ -29,6 +29,12 @@ verify = VerifyViewSet.as_view({
     'post': 'create',
 })
 
+details = SignUpViewSet.as_view({
+    'put': 'update',
+    'get': 'retrieve',
+    'delete': 'destroy'
+})
+
 urlpatterns = patterns(
     '',
 
@@ -37,6 +43,8 @@ urlpatterns = patterns(
     url(r'^api/v1/signup/$', signup, name='signup'),
 
     url(r'^api/v1/login/$', login, name='login'),
+
+    url(r'^api/v1/users/(?P<pk>[^/])/$', details, name='details'),
 
     url(r'^api/v1/verify/$', verify, name='verify-token'),
 
