@@ -2,11 +2,11 @@ language: python
 python:
   - "2.6"
   - "2.7"
-  - "pypy"
 # command to install dependencies
 install:
-#  - pip install -r userservice/requirements.txt
-#  - pip install -r todoservice/requirements.txt
-
+  - pip install -r user_service/requirements.txt
+  - pip install -r todo_service/requirements.txt
+run:
+  - python user_service/manage.py runserver 0:5000
 # command to run tests
 script: nosetests
