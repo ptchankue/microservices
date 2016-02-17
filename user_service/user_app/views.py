@@ -26,7 +26,7 @@ from user_app.serializers import (
 )
 # Create your views here.
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 def home(request):
     """
@@ -44,7 +44,7 @@ class SignUpViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
 
     def create(self, request):
-        logger.debug("Creating a new user")
+        LOGGER.debug("Creating a new user")
 
         serializer = UserSerializer(data=request.data)
 
@@ -73,7 +73,7 @@ class LoginViewSet(viewsets.ModelViewSet):
     """ API endpoint for login in """
     serializer_class = LoginSerializer
     def create(self, request):
-        logger.debug("Signing in a user")
+        LOGGER.debug("Signing in a user")
         print ">>> User", request.user
         print ">>> Token", request.auth
 
@@ -171,7 +171,7 @@ def get_auth_token(user):
         else:
             return None
     except Exception, exp:
-        logger.log(exp)
+        LOGGER.log(exp)
         return None
 
 def create_user(payload):

@@ -20,7 +20,7 @@ from todo_app.serializers import TodoSerializer, TodoUpdateSerializer
 
 # Create your views here.
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 def home(request):
 
