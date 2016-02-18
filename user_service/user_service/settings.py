@@ -100,5 +100,5 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=todo_app',
+    '--cover-package=user_app',
 ]
