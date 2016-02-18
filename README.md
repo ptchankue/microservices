@@ -53,10 +53,10 @@ DRF was is therefore used to easily generate tokens, a lot of libraries that ach
 
 A simple model for the Todo was chosen, it is comprised of the following firlds: 
 
-- description: is a string that describes the task that has to be, 
-- due_at: is a date that specifies the deathline for the current task,
-- completed: is a boolean that specifies whether the task is completed or not,
-- author: is a string that is automatically generated using the token that is passed when creating a task. The TodoService retrieves the user linked to that token from the UserService.
+- **description**: is a string that describes the task that has to be, 
+- **due_at**: is a date that specifies the deathline for the current task,
+- **completed**: is a boolean that specifies whether the task is completed or not,
+- **author**: is a string that is automatically generated using the token that is passed when creating a task. The TodoService retrieves the user linked to that token from the UserService.
 
 A custom middleware is created to enrich the incoming requests with the complete user information (username, user id, first name, last name,...)
 
@@ -88,9 +88,15 @@ Creating the required databases
 		
 
 Loading test data
+
+In the user microservice directory:
 		
-		user_service/manage.py loaddata testdata/user.json
+		./manage.py loaddata testdata/users.json
+
+In the todo microservice directory:
 		
+		./manage.py loaddata testdata/todo.json
+				
 Running tests:
 		
 		user_service/manage.py test user_app
@@ -100,7 +106,8 @@ Running tests:
 Django Nose is used to run the tests
 
 
-Travis-CI is used for continuous integration, the configuration can be found in 
+
+**Travis-CI** is used for continuous integration, the configuration can be found in 
 
 		.travis.yml
 		
