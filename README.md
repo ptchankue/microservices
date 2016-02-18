@@ -105,6 +105,7 @@ Running tests:
 		
 Django Nose is used to run the tests
 
+**PyLint** is used for code analysis
 
 
 **Travis-CI** is used for continuous integration, the configuration can be found in 
