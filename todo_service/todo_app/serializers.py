@@ -16,6 +16,6 @@ class TodoSerializer(serializers.Serializer):
 class TodoUpdateSerializer(serializers.Serializer):
     """Defining TodoUpdateSerializer"""
     id = serializers.IntegerField(read_only=True)
-    description = serializers.CharField(min_length=5)
+    description = serializers.CharField(min_length=5, required=False)
     due_at = serializers.DateTimeField(allow_null=True, required=False)
     completed = serializers.BooleanField(required=False)

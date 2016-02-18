@@ -21,7 +21,7 @@ class TodoTestCase(TestCase):
         data = {
             "author": "test",
             "description": "Sprint planning meeting",
-            "created_at":datetime.now()
+            "created_at": datetime.now()
         }
         url = "/api/v1/todos/"
         self.response = self.client.post(url, data)
@@ -65,7 +65,7 @@ class TodoTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_retrieve(self):
+    def test_retrieve_(self):
         """>>> Retrieving a todo task"""
 
         resp = json.loads(self.response.content)
@@ -79,4 +79,5 @@ class TodoTestCase(TestCase):
         self.assertEqual(resp["author"], "test-user")
 
 def create_task():
+    """Creating a task"""
     pass
