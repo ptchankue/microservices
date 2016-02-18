@@ -11,4 +11,5 @@ install:
 script:
   - nosetests
   - python user_service/manage.py test user_app
-  - python user_service/manage.py runserver 0:5000
+  - python todo_service/manage.py test todo_app
+  #- python user_service/manage.py runserver 0:5000
