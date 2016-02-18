@@ -2,7 +2,6 @@
     Serializers to manage user inputs
 """
 from rest_framework import serializers
-from todo_app.models import Todo
 
 class TodoSerializer(serializers.Serializer):
     """Defining TodoSerializer"""

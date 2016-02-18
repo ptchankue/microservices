@@ -1,12 +1,16 @@
-import requests
+"""
+    auth.py defining the custom Middleware to handle the permissions
+"""
 import json
+import requests
 
 from django.conf import settings
 from django.http import HttpResponse
 
 class CustomAuthMiddleware(object):
-
+    """Middleware that handles the permissions"""
     def process_request(self, request):
+        """Processing the incoming request"""
 
         if "HTTP_AUTHORIZATION" in request.META and request.META["HTTP_AUTHORIZATION"]:
             self.token = request.META['HTTP_AUTHORIZATION']
@@ -38,16 +42,16 @@ class CustomAuthMiddleware(object):
         """Verify the token with the user service"""
         url = settings.USER_URL + '/verify/'
     	headers = {
-    		          "Content-Type": "application/json",
-    		          "Authorization": "f2823f78920bd288b9f84ebb4cf6a90d702335c2"
-    	}
+		              "Content-Type": "application/json",
+		              "Authorization": "f2823f78920bd288b9f84ebb4cf6a90d702335c2"
+	          }
 
         payload = {
             "token": self.token
-        }
-    	response = None
+            }
+        response = None
 
-    	print url, "\n", headers
+        print url, "\n", headers
         print "payload\n", payload
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 

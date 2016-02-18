@@ -51,6 +51,7 @@ class TodoViewSet(viewsets.ModelViewSet):
 
         serializer.initial_data["author"] = request.user
         if serializer.is_valid():
+
             post = Todo()
 
             post.description = serializer.data["description"]
