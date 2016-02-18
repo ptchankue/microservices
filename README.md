@@ -26,7 +26,7 @@ The two services will not be sharing any data hence have to commnuicate through 
 
 ![Architecture of teh microservice](docs/microservice_architecture.png)
 
--> **Fig.1: Architecture of the microservice system** <-
+ **Fig.1: Architecture of the microservice system** 
 
 Figure 1 depicts the architecture of the micro service system allowing users to manipulate their todo lists. Users interacts wiuth the syste using any front-end application (mobile, desktop). 
 
