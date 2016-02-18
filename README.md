@@ -71,18 +71,37 @@ Steps to set up the project:
 
 Creating the virtual environment
 
-		source bin/activitate my_micro_env
+		source bin/activate my_micro_env
 
 Installing the dependencies
 
-		pip install -r requirements.txt
+		pip install -r user_service/requirements.txt
+		
+		pip install -r todo_service/requirements.txt
+		
 
 Creating the required databases
 
-		./manage.py syncdb
+		user_service/manage.py syncdb
+		
+		todo_service/manage.py syncdb
+		
 
+Loading test data
+		
+		user_service/manage.py loaddata testdata/user.json
+		
+Running tests:
+		
+		user_service/manage.py test user_app
+		
+		todo_service/manage.py test todo_app
+		
 Django Nose is used to run the tests
 
 
-Travis-CI is used for continuous integration
+Travis-CI is used for continuous integration, the configuration can be found in 
+
+		.travis.yml
+		
 
