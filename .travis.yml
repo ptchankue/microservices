@@ -7,6 +7,7 @@ install:
   - pip install -r user_service/requirements.txt
   - pip install -r todo_service/requirements.txt
 run:
+  - python user_service/manage.py test user_app
   - python user_service/manage.py runserver 0:5000
 # command to run tests
 script: nosetests
