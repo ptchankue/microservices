@@ -191,7 +191,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def create(self, request):
-        print request.data
+
         if "token" in request.data and request.data["token"]:
 
             token = get_user_by_token(request.data["token"])
@@ -260,6 +260,7 @@ def get_user_by_token(token):
         Arg: token
         Result: user id (django.contrib.auth.models.User)
     """
+    print token
     try:
         i = Token.objects.get(key=token).user_id
     except Exception, exp:
@@ -275,10 +276,17 @@ def check_permission(request, post, action):
         Result: None if everythong is fine, 403 error otherwise
     """
     token = request.META['HTTP_AUTHORIZATION']
-    print token
-    user = User.objects.get(id=get_user_by_token(token))
+    try:
+        user_id = get_user_by_token(token)
+        print ">>>", user_id, token
+        user = User.objects.get(id=user_id)
+        if user.is_superuser:
+            return
 
-    if post.username != user.username:
+    except:
+        user = None
+
+    if user is None or post.username != user.username:
 
         msg = {
             "error": 403,
