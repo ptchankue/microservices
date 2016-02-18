@@ -21,6 +21,10 @@ The two services will not be sharing any data hence have to commnuicate through 
 
 [Installation and Continuous Integration (CI)](#installation)
 
+[Licensing](#license)
+
+[Reporting Issues](#issues)
+
 <a id="architecture"></a>
 ## Architecture:
 
@@ -111,5 +115,14 @@ Django Nose is used to run the tests
 **Travis-CI** is used for continuous integration, the configuration can be found in 
 
 		.travis.yml
-		
+
+<a id="license"></a>
+##Licensing
+
+This project uses the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+<a id="issues"></a>
+##Reporting Issues
+
+If you have bugs or other issues, feel free to report them [here](https://github.com/ptchankue/microservices/issues)
 
