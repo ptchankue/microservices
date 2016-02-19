@@ -107,6 +107,13 @@ Running tests:
 		
 		todo_service/manage.py test todo_app
 		
+NB: To run the tests on TodoService, the UserServioce has to be running on the port 5000.
+ 
+		user_service/manage.py runserver 5000
+		
+This will allow the verification of tokens
+
+
 Django Nose is used to run the tests
 
 **PyLint** is used for code analysis
