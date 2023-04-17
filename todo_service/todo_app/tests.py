@@ -88,7 +88,7 @@ class TodoTestCase(TestCase):
         """>>> Retrieving a todo task"""
 
         resp = json.loads(self.response.content)
-        print resp
+        print (resp)
         url = "/api/v1/todos/" + str(resp["id"]) + "/"
         response = self.client.get(url, content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -138,7 +138,7 @@ class TestHelpers(TestCase):
     def test_home(self):
         """testing home landing page"""
         response = self.client.get('/')
-        print response.__dict__
+        print (response.__dict__)
         self.assertEqual(response.status_code, 200)
 
     def test_convert_time(self):

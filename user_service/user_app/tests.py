@@ -128,8 +128,8 @@ class UserUtil(object):
         self.payload["password"] = "test"
         try:
             user = create_user(self.payload)
-        except Exception, exp:
-            print exp
+        except Exception as  exp:
+            print( exp)
             user = None
         return user
     def test_get_user_by_token(self):
