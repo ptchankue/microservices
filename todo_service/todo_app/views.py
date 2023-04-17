@@ -14,9 +14,9 @@ from rest_framework import (
 from rest_framework.response import Response
 
 
-from todo_app.models import Todo
+from .models import Todo
 
-from todo_app.serializers import TodoSerializer, TodoUpdateSerializer
+from .serializers import TodoSerializer, TodoUpdateSerializer
 
 # Create your views here.
 
@@ -45,8 +45,8 @@ class TodoViewSet(viewsets.ModelViewSet):
     def create(self, request):
         """Creating a task for a user"""
 
-        print ">>> User:", request.user
-        print ">>> Token:", request.auth, request.current_user
+        print (">>> User:", request.user)
+        print (">>> Token:", request.auth, request.current_user)
         serializer = TodoSerializer(data=request.data)
 
         serializer.initial_data["author"] = request.user
@@ -79,8 +79,8 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
         """Updating a task"""
-        print ">>> User:", request.user
-        print ">>> Token:", request.auth
+        print (">>> User:", request.user)
+        print (">>> Token:", request.auth)
 
         serializer = TodoUpdateSerializer(data=request.data)
         if serializer.is_valid():
@@ -104,14 +104,14 @@ class TodoViewSet(viewsets.ModelViewSet):
                 post.save()
 
 
-                print post.due_at, type(post.due_at), post.created_at
+                print (post.due_at, type(post.due_at), post.created_at)
 
 
 
 
                 serializer = TodoSerializer(post)
 
-                print '\nPUT ===>' + str(serializer.data)
+                print ('\nPUT ===>' + str(serializer.data))
 
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             else:
@@ -133,11 +133,11 @@ class TodoViewSet(viewsets.ModelViewSet):
         """
             Retrieving a task
         """
-        print ">>> User", request.user
-        print ">>> Token", request.auth
+        print (">>> User", request.user)
+        print (">>> Token", request.auth)
 
         author = request.current_user["username"]
-        print "current user:", author
+        print ("current user:", author)
         post = Todo.objects.get(id=pk)
 
         if post:
@@ -156,8 +156,8 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None):
         """Deleting a task"""
-        print ">>> User", request.user
-        print ">>> Token", request.auth
+        print (">>> User", request.user)
+        print (">>> Token", request.auth)
 
         task = Todo.objects.get(id=pk)
 

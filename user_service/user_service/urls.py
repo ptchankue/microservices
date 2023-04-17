@@ -2,18 +2,17 @@
     urls.py
     Defining endpoints
 """
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, path
 
 from django.contrib import admin
+
+from user_service.user_app.views import SignUpViewSet, LoginViewSet, VerifyViewSet, home
+
 admin.autodiscover()
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
-from user_app.views import (
-    SignUpViewSet,
-    LoginViewSet,
-    VerifyViewSet,
-)
+
 
 signup = SignUpViewSet.as_view({
     'post': 'create',
@@ -36,7 +35,7 @@ details = SignUpViewSet.as_view({
 })
 
 urlpatterns = [
-    path('', 'user_app.views.home', name='home'),
+    path('', home, name='home'),
 
     path('api/v1/signup/', signup, name='signup'),
 
@@ -48,7 +47,7 @@ urlpatterns = [
 
     path('api/v1/validate/', verify, name='validate-token'),
 
-    url('admin/', include(admin.site.urls)),
+    path('admin/', include(admin.site.urls)),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

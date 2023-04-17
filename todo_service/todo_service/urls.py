@@ -1,12 +1,15 @@
-from django.conf.urls import patterns, include, path
+from django.conf.urls import  include, path
 
 from django.contrib import admin
+
+from todo_service.todo_app.views import TodoViewSet
+
 admin.autodiscover()
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
-from todo_app.views import TodoViewSet
+
 
 creation = TodoViewSet.as_view({
     'post': 'create',

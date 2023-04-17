@@ -2,3 +2,4 @@
 .DS_Store
 *.sqlite3
 todo_service/todo_service/middleware/auth.pyc
+.env

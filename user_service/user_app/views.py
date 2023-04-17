@@ -20,7 +20,7 @@ from rest_framework import (
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-from user_app.serializers import (
+from .serializers import (
     UserSerializer,
     LoginSerializer,
     UserUpdateSerializer
@@ -138,8 +138,8 @@ class LoginViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         LOGGER.debug("Signing in a user")
-        print ">>> User", request.user
-        print ">>> Token", request.auth
+        print (">>> User", request.user)
+        print (">>> Token", request.auth)
 
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -179,10 +179,10 @@ def create_auth_token(user):
         Arg: user, an instance of User
         Result: a token
     """
-    print ">>> creating a token"
+    print (">>> creating a token")
     token = get_auth_token(user)
     if token is None:
-        print ">>> actual token creation"
+        print (">>> actual token creation")
         token = Token.objects.create(user=user)
     return token.key
 
@@ -199,7 +199,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
 
             if token:
                 # User.objects.get(id=3)
-                print "the user id", token
+                print ("the user id", token)
                 user = User.objects.get(id=token).__dict__
                 response = {
                     "username": user["username"],
@@ -230,14 +230,14 @@ def get_auth_token(user):
         Args: an instance of User
         Result: a token (string)
     """
-    print ">>> getting a token for", user
+    print (">>> getting a token for", user)
     try:
         token = Token.objects.get(user_id=user.id)
         if token:
             return token.key
         else:
             return None
-    except Exception, exp:
+    except Exception as  exp:
         LOGGER.debug(exp)
         return None
 
@@ -249,11 +249,11 @@ def create_user(payload):
             the keys are (username, password, email, first_name, last_name)
         Result: an instance of the newly created user
     """
-    print ">>> creating a user"
+    print (">>> creating a user")
     try:
         user = User.objects.create_user(**payload)
-    except IntegrityError, exp:
-        print exp
+    except IntegrityError as  exp:
+        print (exp)
         user = User.objects.get(username=payload["username"])
     return user
 
@@ -264,11 +264,11 @@ def get_user_by_token(token):
         Arg: token
         Result: user id (django.contrib.auth.models.User)
     """
-    print token
+    print (token)
     try:
         i = Token.objects.get(key=token).user_id
-    except Exception, exp:
-        print exp
+    except Exception as  exp:
+        print (exp)
         i = None
     return i
 
@@ -283,7 +283,7 @@ def check_permission(request, post, action):
     token = request.META['HTTP_AUTHORIZATION']
     try:
         user_id = get_user_by_token(token)
-        print ">>>", user_id, token
+        print (">>>", user_id, token)
         user = User.objects.get(id=user_id)
         if user.is_superuser:
             return
