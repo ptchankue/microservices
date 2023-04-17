@@ -114,6 +114,7 @@ class VerifyTest(TestCase):
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, 404)
 
+
 class UserUtil(object):
     """
         Util class used to create users for testing
