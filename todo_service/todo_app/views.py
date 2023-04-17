@@ -13,7 +13,6 @@ from rest_framework import (
 )
 from rest_framework.response import Response
 
-
 from .models import Todo
 
 from .serializers import TodoSerializer, TodoUpdateSerializer
@@ -22,15 +21,15 @@ from .serializers import TodoSerializer, TodoUpdateSerializer
 
 LOGGER = logging.getLogger(__name__)
 
-def home(request):
 
+def home(request):
     """Landing page for testing"""
 
     msg = "You have landed on the Todo service :)"
     return HttpResponse(msg)
 
-class TodoViewSet(viewsets.ModelViewSet):
 
+class TodoViewSet(viewsets.ModelViewSet):
     """API endpoing to manage todo lists"""
 
     serializer_class = TodoSerializer
@@ -45,8 +44,8 @@ class TodoViewSet(viewsets.ModelViewSet):
     def create(self, request):
         """Creating a task for a user"""
 
-        print (">>> User:", request.user)
-        print (">>> Token:", request.auth, request.current_user)
+        print(">>> User:", request.user)
+        print(">>> Token:", request.auth, request.current_user)
         serializer = TodoSerializer(data=request.data)
 
         serializer.initial_data["author"] = request.user
@@ -79,8 +78,8 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
         """Updating a task"""
-        print (">>> User:", request.user)
-        print (">>> Token:", request.auth)
+        print(">>> User:", request.user)
+        print(">>> Token:", request.auth)
 
         serializer = TodoUpdateSerializer(data=request.data)
         if serializer.is_valid():
@@ -92,7 +91,6 @@ class TodoViewSet(viewsets.ModelViewSet):
                 check_permission(request, post, 'update')
 
                 if "due_at" in serializer.data and serializer.data["due_at"]:
-
                     post.due_at = convert_time(serializer.data["due_at"])
 
                 if "description" in serializer.data and serializer.data["description"]:
@@ -103,15 +101,11 @@ class TodoViewSet(viewsets.ModelViewSet):
 
                 post.save()
 
-
-                print (post.due_at, type(post.due_at), post.created_at)
-
-
-
+                print(post.due_at, type(post.due_at), post.created_at)
 
                 serializer = TodoSerializer(post)
 
-                print ('\nPUT ===>' + str(serializer.data))
+                print('\nPUT ===>' + str(serializer.data))
 
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             else:
@@ -128,16 +122,15 @@ class TodoViewSet(viewsets.ModelViewSet):
             }
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
-
     def retrieve(self, request, pk=None):
         """
             Retrieving a task
         """
-        print (">>> User", request.user)
-        print (">>> Token", request.auth)
+        print(">>> User", request.user)
+        print(">>> Token", request.auth)
 
         author = request.current_user["username"]
-        print ("current user:", author)
+        print("current user:", author)
         post = Todo.objects.get(id=pk)
 
         if post:
@@ -156,8 +149,8 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None):
         """Deleting a task"""
-        print (">>> User", request.user)
-        print (">>> Token", request.auth)
+        print(">>> User", request.user)
+        print(">>> Token", request.auth)
 
         task = Todo.objects.get(id=pk)
 
@@ -178,6 +171,7 @@ class TodoViewSet(viewsets.ModelViewSet):
             }
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
+
 def check_permission(request, post, action):
     """
         Checks if the current user has the right to perform an action
@@ -186,12 +180,12 @@ def check_permission(request, post, action):
         Result: None if everythong is fine, 403 error otherwise
     """
     if post.author != request.user:
-
         msg = {
             "error": 403,
-            "message": "You are not permitted to %s this content"%action
+            "message": "You are not permitted to %s this content" % action
         }
         return Response(msg, status=403)
+
 
 def convert_time(str_time):
     """
