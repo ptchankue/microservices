@@ -1,0 +1,19 @@
+version: '3'
+services:
+  todo:
+    restart: always
+    build: .
+    command: python todo_service/manage.py runserver
+    ports:
+      - "5002:8000"
+    volumes:
+      - .:/microservices
+
+  user:
+    restart: always
+    build: .
+    command: python user_service/manage.py runserver
+    ports:
+      - "5001:8000"
+    volumes:
+      - .:/microservices

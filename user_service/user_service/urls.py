@@ -35,22 +35,20 @@ details = SignUpViewSet.as_view({
     'delete': 'destroy'
 })
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
+    path('', 'user_app.views.home', name='home'),
 
-    url(r'^$', 'user_app.views.home', name='home'),
+    path('api/v1/signup/', signup, name='signup'),
 
-    url(r'^api/v1/signup/$', signup, name='signup'),
+    path('api/v1/login/', login, name='login'),
 
-    url(r'^api/v1/login/$', login, name='login'),
+    path('api/v1/users/(?P<pk>[^/])/', details, name='details'),
 
-    url(r'^api/v1/users/(?P<pk>[^/])/$', details, name='details'),
+    path('api/v1/verify/', verify, name='verify-token'),
 
-    url(r'^api/v1/verify/$', verify, name='verify-token'),
+    path('api/v1/validate/', verify, name='validate-token'),
 
-    url(r'^api/v1/validate/$', verify, name='validate-token'),
-
-    url(r'^admin/', include(admin.site.urls)),
-)
+    url('admin/', include(admin.site.urls)),
+]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

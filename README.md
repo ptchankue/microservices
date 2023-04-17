@@ -28,7 +28,7 @@ The two services will not be sharing any data hence have to commnuicate through 
 <a id="architecture"></a>
 ## Architecture:
 
-![Architecture of teh microservice](docs/microservice_architecture.png)
+![Architecture of the microservice](docs/microservice_architecture.png)
 
  **Fig.1: Architecture of the microservice system** 
 
@@ -132,4 +132,6 @@ This project uses the [Apache License, version 2.0](http://www.apache.org/licens
 ##Reporting Issues
 
 If you have bugs or other issues, feel free to report them [here](https://github.com/ptchankue/microservices/issues)
+
+# Dockerizing the project to ease the execution
 

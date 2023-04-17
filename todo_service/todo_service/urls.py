@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, include, path
 
 from django.contrib import admin
 admin.autodiscover()
@@ -19,19 +19,17 @@ details = TodoViewSet.as_view({
     'delete': 'destroy'
 })
 
-urlpatterns = patterns(
-    '',
-    # Examples:
-    url(r'^$', 'todo_app.views.home', name='home'),
+urlpatterns = [
+    path('', 'todo_app.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
     # to create and show the list of todo for a particular user
-    url(r'^api/v1/todos/$', creation, name='todo-creation'),
+    path('api/v1/todos/', creation, name='todo-creation'),
 
     # to update, view and delete a todo task
-    url(r'^api/v1/todos/(?P<pk>[^/])/$', details, name='todo-detail'),
+    path('api/v1/todos/(?P<pk>[^/])/', details, name='todo-detail'),
 
-    url(r'^admin/', include(admin.site.urls)),
-)
+    path(r'^admin/', include(admin.site.urls)),
+]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

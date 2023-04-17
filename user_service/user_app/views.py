@@ -25,18 +25,19 @@ from user_app.serializers import (
     LoginSerializer,
     UserUpdateSerializer
 )
+
 # Create your views here.
 
 LOGGER = logging.getLogger(__name__)
+
 
 def home(request):
     """
         Home page to reach this service
     """
 
-    msg = "You landed safely on the UserService API:\n"%request.META
+    msg = "You landed safely on the UserService API:\n" % request.META
     return HttpResponse(msg)
-
 
 
 class SignUpViewSet(viewsets.ModelViewSet):
@@ -103,17 +104,14 @@ class SignUpViewSet(viewsets.ModelViewSet):
                 check_permission(request, post, 'update')
 
                 if "first_name" in serializer.data and serializer.data["first_name"]:
-
                     post.first_name = serializer.data["first_name"]
 
                 if "last_name" in serializer.data and serializer.data["last_name"]:
                     post.last_name = serializer.data["last_name"]
 
-
                 post.save()
 
                 serializer = UserSerializer(post)
-
 
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             else:
@@ -130,13 +128,14 @@ class SignUpViewSet(viewsets.ModelViewSet):
             }
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
-
     def destroy(self, request, pk=None):
         pass
+
 
 class LoginViewSet(viewsets.ModelViewSet):
     """ API endpoint for login in """
     serializer_class = LoginSerializer
+
     def create(self, request):
         LOGGER.debug("Signing in a user")
         print ">>> User", request.user
@@ -173,6 +172,7 @@ class LoginViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+
 def create_auth_token(user):
     """
         Creating a token
@@ -186,6 +186,7 @@ def create_auth_token(user):
         token = Token.objects.create(user=user)
     return token.key
 
+
 class VerifyViewSet(viewsets.ModelViewSet):
     """ API endpoint to verify a user token """
     serializer_class = UserSerializer
@@ -197,7 +198,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
             token = get_user_by_token(request.data["token"])
 
             if token:
-                #User.objects.get(id=3)
+                # User.objects.get(id=3)
                 print "the user id", token
                 user = User.objects.get(id=token).__dict__
                 response = {
@@ -211,7 +212,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
             else:
                 msg = {
                     "error": 404,
-                    "message": "token %s was not found"%(request.data["token"])
+                    "message": "token %s was not found" % (request.data["token"])
                 }
                 return Response(msg, status=status.HTTP_404_NOT_FOUND)
 
@@ -221,6 +222,7 @@ class VerifyViewSet(viewsets.ModelViewSet):
                 "message": "<token> needs to be provided"
             }
             return Response(msg, status.HTTP_400_BAD_REQUEST)
+
 
 def get_auth_token(user):
     """
@@ -239,6 +241,7 @@ def get_auth_token(user):
         LOGGER.debug(exp)
         return None
 
+
 def create_user(payload):
     """
         Creating a user
@@ -254,6 +257,7 @@ def create_user(payload):
         user = User.objects.get(username=payload["username"])
     return user
 
+
 def get_user_by_token(token):
     """
         Getting a user id from User knowing its token
@@ -267,6 +271,7 @@ def get_user_by_token(token):
         print exp
         i = None
     return i
+
 
 def check_permission(request, post, action):
     """
@@ -287,9 +292,8 @@ def check_permission(request, post, action):
         user = None
 
     if user is None or post.username != user.username:
-
         msg = {
             "error": 403,
-            "message": "You are not permitted to %s this content"%action
+            "message": "You are not permitted to %s this content" % action
         }
         return Response(msg, status=403)
