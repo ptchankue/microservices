@@ -3,16 +3,17 @@ services:
   todo:
     restart: always
     build: .
-    command: python todo_service/manage.py runserver
+#    command: "sh run_web.sh"
+    command: python todo_service/manage.py runserver 0:8001
     ports:
-      - "5002:8000"
+      - "5002:8001"
     volumes:
       - .:/microservices
 
   user:
     restart: always
     build: .
-    command: python user_service/manage.py runserver
+    command: python user_service/manage.py runserver 0:8000
     ports:
       - "5001:8000"
     volumes:
