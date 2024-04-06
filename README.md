@@ -1,14 +1,13 @@
 # Micro services
 
-This open source project aims to show case the interaction between two micro services: UserService and TodoService.
+This open-source project is designed to demonstrate the interaction between two microservices: UserService and TodoService.
 
-The two services will not be sharing any data hence have to commnuicate through API endpoints. For example when getting the list of tasks for a user, the **Todo service** can verify the user requesting the information via the **User service**.
-
+These two services operate independently and do not share data directly. Instead, they communicate with each other through API endpoints. For instance, when retrieving a list of tasks for a user, the TodoService can authenticate the user by querying the User service.
 
 [Django Rest Framework] (http://www.django-rest-framework.org/) (DRF) will intensively be used in this project for :
 
 *	Views implementation (Class Based Views),
-*	Authentification: Generating and managing tokens
+*	Authentication: Generating and managing tokens
 *	Serializers design
 
 ## Table of content
