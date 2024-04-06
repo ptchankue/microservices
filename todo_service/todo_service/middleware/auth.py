@@ -2,6 +2,7 @@
     auth.py defining the custom Middleware to handle the permissions
 """
 import json
+import logging
 from typing import Any
 
 import requests
@@ -9,6 +10,9 @@ import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.urls import reverse
+
+
+logger = logging.getLogger(__name__)
 
 
 class CustomAuthMiddleware:
@@ -66,9 +70,7 @@ class CustomAuthMiddleware:
         payload = {
             "token": self.token
         }
-        response = None
-
-        print(url, "\n", headers)
+        logger.info(f"{url}\n{headers}")
         print("payload\n", payload)
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
