@@ -134,3 +134,9 @@ If you have bugs or other issues, feel free to report them [here](https://github
 
 # Dockerizing the project to ease the execution
 
+
+### Infrastructure model
+![Infrastructure main model](.infragenie/infrastructure_main_model.svg)
+- [todo component model](.infragenie/todo_component_model.svg)
+
+---
